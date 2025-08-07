@@ -62,16 +62,32 @@ require( ["js/qlik"], function ( qlik ) {
 		document.getElementById('spinner').style.visibility = 'hidden';
 		console.log("Removing Loaders");
 		
-		// Wait for sidebar to be created and then modify it
-		setTimeout(function() {
-			var sidebar = document.querySelector("#pHTVjT_content > div > div.sidebar");
+		// Wait for sidebar to be created and then modify it with multiple attempts
+		function modifySidebar(attempts) {
+			if (attempts <= 0) {
+				console.log("Sidebar modification failed after all attempts");
+				return;
+			}
+			
+			var sidebar = document.querySelector("#pHTVjT_content > div > div.sidebar") || 
+			              document.querySelector(".sidebar") ||
+			              document.querySelector("[class*='sidebar']");
+			              
 			if (sidebar) {
 				sidebar.style.flexBasis = '50px';
 				sidebar.style.minWidth = '50px';
-				console.log("Sidebar modified");
+				console.log("Sidebar modified successfully");
 			} else {
-				console.log("Sidebar not found");
+				console.log("Sidebar not found, retrying... attempts left: " + (attempts - 1));
+				setTimeout(function() {
+					modifySidebar(attempts - 1);
+				}, 500);
 			}
+		}
+		
+		// Start with 6 attempts (3 seconds total)
+		setTimeout(function() {
+			modifySidebar(6);
 		}, 1000);
 	});
 
