@@ -33,7 +33,7 @@ require( ["js/qlik"], function ( qlik ) {
 
 	//callbacks -- inserted here --
 	//open apps -- inserted here --
-	var app = qlik.openApp('e45e93fb-2ef9-432a-8c7a-5ddeaced8018', config);
+	var app = qlik.openApp('abe37f96-29b3-42f3-b45c-db41d2ab1320', config);
 	app.clearAll();
 //var app2 = qlik.openApp('f9b1998e-382f-48f5-85e7-d3f243271899', config);
 	function cs(){
@@ -58,30 +58,22 @@ require( ["js/qlik"], function ( qlik ) {
 	//	document.getElementById('spinner').style.visibility = 'hidden';
 	//document.getElementById('loader').style.visibility = 'hidden';
 	app.getObject('QV02','HXJcjzA');
-	app.getObject('QV01','pHTVjT');
-	document.getElementById('spinner').style.visibility = 'hidden';
-	//document.getElementById('loader').style.visibility = 'hidden';
-	console.log("Removing Loaders");
-	/*if (navigator.userAgent.match(/Android/i)
-		|| navigator.userAgent.match(/webOS/i)
-		|| navigator.userAgent.match(/iPhone/i)
-		|| navigator.userAgent.match(/iPad/i)
-		|| navigator.userAgent.match(/iPod/i)
-		|| navigator.userAgent.match(/BlackBerry/i)
-		|| navigator.userAgent.match(/Windows Phone/i)) {
-		a = true ;
-		console.log ('Device is mobile '+a);
-
-
-
-document.getElementsByClassName("sidebar").style.visibility="none";
-
-	} else {
-		a = false ;
-	}*/
-	$( document ).ready(
-	document.querySelector("#pHTVjT_content > div > div.sidebar").style.flexBasis='2');
-console.log("set");
+	app.getObject('QV01','pHTVjT').then(function() {
+		document.getElementById('spinner').style.visibility = 'hidden';
+		console.log("Removing Loaders");
+		
+		// Wait for sidebar to be created and then modify it
+		setTimeout(function() {
+			var sidebar = document.querySelector("#pHTVjT_content > div > div.sidebar");
+			if (sidebar) {
+				sidebar.style.flexBasis = '50px';
+				sidebar.style.minWidth = '50px';
+				console.log("Sidebar modified");
+			} else {
+				console.log("Sidebar not found");
+			}
+		}, 1000);
+	});
 
 
 
