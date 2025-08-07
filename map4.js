@@ -11,6 +11,10 @@ require.config({
 
 require(["js/qlik"], function (qlik) {
 
+    // Show spinner initially
+    document.getElementById('spinner').style.visibility = 'visible';
+    document.getElementById('spinner').style.display = 'block';
+
     qlik.on("error", function (error) {
         $('#popupText').append(error.message + "<br>");
         $('#popup').fadeIn(1000);
@@ -34,8 +38,13 @@ require(["js/qlik"], function (qlik) {
   //  });
 
     app.getObject('QV02', 'HXJcjzA');
-    app.getObject('QV01', 'pHTVjT');
-    document.getElementById('spinner').style.visibility = 'hidden';
-    console.log("Removing Loaders");
+    
+    // Get the map object and hide spinner when it's loaded
+    app.getObject('QV01', 'pHTVjT').then(function() {
+        // Hide spinner when map is loaded
+        document.getElementById('spinner').style.visibility = 'hidden';
+        document.getElementById('spinner').style.display = 'none';
+        console.log("Map loaded, removing spinner");
+    });
 
 });
