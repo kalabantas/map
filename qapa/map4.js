@@ -81,8 +81,8 @@ require( ["js/qlik"], function ( qlik ) {
 			              document.querySelector("[class*='sidebar']");
 			              
 			if (sidebar) {
-				sidebar.style.flexBasis = '50px';
-				sidebar.style.minWidth = '50px';
+				sidebar.style.flexBasis = '150px';
+				sidebar.style.minWidth = '150px';
 				console.log("Sidebar modified successfully");
 			} else {
 				console.log("Sidebar not found, retrying... attempts left: " + (attempts - 1));
