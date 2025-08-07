@@ -1,64 +1,94 @@
+/*
+ * Basic responsive mashup template
+ * @owner Enter you name here (xxx)
+ */
+/*
+ *    Fill in host and port for Qlik engine
+ */
+//var prefix = window.location.pathname.substr( 0, window.location.pathname.toLowerCase().lastIndexOf( "/extensions" ) + 1 );
+
 var prefix = '/';
 var config = {
-    host: 'qapa.moe.edu.kw',
-    prefix: '/',
-    port: 443,
-    isSecure: true
+	host: 'qapa.moe.edu.kw',
+	prefix: '/',
+	port: 443,
+	isSecure: true
 };
+require.config( {
+	baseUrl: ( config.isSecure ? "https://" : "http://" ) + config.host + (config.port ? ":" + config.port : "") + config.prefix + "resources"
+} );
 
-// Optimize RequireJS configuration
-require.config({
-    baseUrl: (config.isSecure ? "https://" : "http://") + config.host + (config.port ? ":" + config.port : "") + config.prefix + "resources",
-    waitSeconds: 30, // Increase timeout for slower connections
-    enforceDefine: false
-});
+require( ["js/qlik"], function ( qlik ) {
 
-// Use DOMContentLoaded for faster initialization
-document.addEventListener('DOMContentLoaded', function() {
-    require(["js/qlik"], function (qlik) {
 
-        // Show spinner initially
-        const spinner = document.getElementById('spinner');
-        if (spinner) {
-            spinner.style.visibility = 'visible';
-            spinner.style.display = 'block';
-        }
+	qlik.on( "error", function ( error ) {
+		$( '#popupText' ).append( error.message + "<br>" );
+		$( '#popup' ).fadeIn( 1000 );
+	} );
 
-        qlik.on("error", function (error) {
-            $('#popupText').append(error.message + "<br>");
-            $('#popup').fadeIn(1000);
-        });
 
-        $("#closePopup").click(function () {
-            $('#popup').hide();
-        });
+	$( "#closePopup" ).click( function () {
+		$( '#popup' ).hide();
+	} );
 
-        var app = qlik.openApp('abe37f96-29b3-42f3-b45c-db41d2ab1320', config);
-        
-        app.clearAll();
+	//callbacks -- inserted here --
+	//open apps -- inserted here --
+	var app = qlik.openApp('e45e93fb-2ef9-432a-8c7a-5ddeaced8018', config);
+	app.clearAll();
+//var app2 = qlik.openApp('f9b1998e-382f-48f5-85e7-d3f243271899', config);
+	function cs(){
+		app.clearAll();
+	}
 
-        function cs() {
-            app.clearAll();
-        }
 
-        // Load objects in parallel for better performance
-        Promise.all([
-            app.getObject('QV02', 'HXJcjzA'),
-            app.getObject('QV01', 'pHTVjT')
-        ]).then(function() {
-            // Hide spinner when both objects are loaded
-            if (spinner) {
-                spinner.style.visibility = 'hidden';
-                spinner.style.display = 'none';
-            }
-            console.log("All objects loaded, removing spinner");
-        }).catch(function(error) {
-            console.error("Error loading objects:", error);
-            if (spinner) {
-                spinner.style.visibility = 'hidden';
-                spinner.style.display = 'none';
-            }
-        });
 
-    });
-});
+//	$('.button').on('click',function(){
+
+	//	cs();
+
+//	})
+
+	//get objects -- inserted here --
+	//app.getObject('QV01','XvPEV'); // KPI
+	//app.getObject('QV06','gcaAvv');// Map
+	//app.getObject('QV04','NKQmMp'); // Student with nationality
+	//app.getObject('QV03','YUetpCP');// Student with Level
+	//app.getObject('QV02','NKQmMp');
+	//create cubes and lists -- inserted here --
+	//	document.getElementById('spinner').style.visibility = 'hidden';
+	//document.getElementById('loader').style.visibility = 'hidden';
+	app.getObject('QV02','HXJcjzA');
+	app.getObject('QV01','pHTVjT');
+	document.getElementById('spinner').style.visibility = 'hidden';
+	//document.getElementById('loader').style.visibility = 'hidden';
+	console.log("Removing Loaders");
+	/*if (navigator.userAgent.match(/Android/i)
+		|| navigator.userAgent.match(/webOS/i)
+		|| navigator.userAgent.match(/iPhone/i)
+		|| navigator.userAgent.match(/iPad/i)
+		|| navigator.userAgent.match(/iPod/i)
+		|| navigator.userAgent.match(/BlackBerry/i)
+		|| navigator.userAgent.match(/Windows Phone/i)) {
+		a = true ;
+		console.log ('Device is mobile '+a);
+
+
+
+document.getElementsByClassName("sidebar").style.visibility="none";
+
+	} else {
+		a = false ;
+	}*/
+	$( document ).ready(
+	document.querySelector("#pHTVjT_content > div > div.sidebar").style.flexBasis='2');
+console.log("set");
+
+
+
+
+
+
+
+
+
+} );

@@ -9,7 +9,7 @@
 
 var prefix = '/';
 var config = {
-	host: 'qape.moe.edu.kw',
+	host: 'qapa.moe.edu.kw',
 	prefix: '/',
 	port: 443,
 	isSecure: true
@@ -92,3 +92,4 @@ console.log("set");
 
 
 } );
+
