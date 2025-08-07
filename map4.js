@@ -20,6 +20,13 @@ require.config( {
 
 require( ["js/qlik"], function ( qlik ) {
 
+	// Add global error handler for resource loading errors
+	window.addEventListener('error', function(e) {
+		if (e.target && e.target.src && e.target.src.includes('%7B%7B')) {
+			console.warn('Blocked template variable in image source:', decodeURIComponent(e.target.src));
+			e.preventDefault();
+		}
+	}, true);
 
 	qlik.on( "error", function ( error ) {
 		$( '#popupText' ).append( error.message + "<br>" );
