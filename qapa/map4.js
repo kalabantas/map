@@ -119,6 +119,65 @@ require( ["js/qlik"], function ( qlik ) {
 		setTimeout(function() {
 			modifySidebar(6);
 		}, 1000);
+		
+		// Enhanced marker styling - monitor for new markers and style them
+		function enhanceMapMarkers() {
+			// Look for markers in the map
+			var markers = document.querySelectorAll('.leaflet-marker-icon, .qv-map-marker, [class*="marker"]');
+			markers.forEach(function(marker) {
+				if (!marker.classList.contains('enhanced-marker')) {
+					marker.classList.add('enhanced-marker');
+					// Apply 3x scaling
+					marker.style.transform = 'scale(3)';
+					marker.style.transformOrigin = 'bottom center';
+					marker.style.zIndex = '1000';
+					
+					// Add school icon
+					if (!marker.querySelector('.school-icon')) {
+						var schoolIcon = document.createElement('div');
+						schoolIcon.className = 'school-icon';
+						schoolIcon.innerHTML = '🏫';
+						schoolIcon.style.cssText = `
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							font-size: 16px;
+							z-index: 1001;
+							pointer-events: none;
+						`;
+						marker.appendChild(schoolIcon);
+					}
+				}
+			});
+		}
+		
+		// Monitor for new markers being added
+		var mapContainer = document.querySelector('#pHTVjT_content');
+		if (mapContainer) {
+			var observer = new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					if (mutation.addedNodes.length > 0) {
+						setTimeout(enhanceMapMarkers, 100);
+					}
+				});
+			});
+			
+			observer.observe(mapContainer, {
+				childList: true,
+				subtree: true
+			});
+			
+			// Initial enhancement
+			setTimeout(enhanceMapMarkers, 2000);
+			
+			// Periodic enhancement for any missed markers
+			setInterval(enhanceMapMarkers, 3000);
+		}
 	});
 
 

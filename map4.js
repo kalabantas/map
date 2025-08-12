@@ -20,6 +20,95 @@ require.config( {
 
 require( ["js/qlik"], function ( qlik ) {
 
+    // Enhanced map marker styling system
+    function enhanceMapMarkers() {
+        // Apply CSS styling to existing markers
+        const markerSelectors = [
+            '.qv-map-marker',
+            '.leaflet-marker-icon',
+            '.marker',
+            '[class*="marker"]',
+            '.qv-object-map .leaflet-marker-icon'
+        ];
+        
+        markerSelectors.forEach(selector => {
+            const markers = document.querySelectorAll(selector);
+            markers.forEach(marker => {
+                if (marker && !marker.classList.contains('enhanced-marker')) {
+                    marker.style.transform = 'scale(3)';
+                    marker.style.transformOrigin = 'bottom center';
+                    marker.style.zIndex = '1000';
+                    marker.classList.add('enhanced-marker');
+                    console.log('Enhanced marker:', marker);
+                }
+            });
+        });
+    }
+
+    // Set up MutationObserver to detect new markers
+    function setupMarkerObserver() {
+        if (typeof MutationObserver !== 'undefined') {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                        // Check if any added nodes are markers or contain markers
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1) { // Element node
+                                // Check if the node itself is a marker
+                                if (node.classList && (
+                                    node.classList.contains('leaflet-marker-icon') ||
+                                    node.classList.contains('qv-map-marker') ||
+                                    node.className.includes('marker')
+                                )) {
+                                    setTimeout(enhanceMapMarkers, 100);
+                                }
+                                // Check if the node contains markers
+                                const containsMarkers = node.querySelector && (
+                                    node.querySelector('.leaflet-marker-icon') ||
+                                    node.querySelector('.qv-map-marker') ||
+                                    node.querySelector('[class*="marker"]')
+                                );
+                                if (containsMarkers) {
+                                    setTimeout(enhanceMapMarkers, 100);
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Observe the entire document for marker changes
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: false
+            });
+
+            console.log('Map marker observer initialized');
+        }
+    }
+
+    // Initialize marker enhancement system
+    function initializeMarkerEnhancement() {
+        // Initial enhancement
+        enhanceMapMarkers();
+        
+        // Set up observer for dynamic markers
+        setupMarkerObserver();
+        
+        // Periodic enhancement (fallback)
+        setInterval(enhanceMapMarkers, 2000);
+        
+        console.log('Map marker enhancement system initialized');
+    }
+
+    // Start marker enhancement when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeMarkerEnhancement);
+    } else {
+        initializeMarkerEnhancement();
+    }
+
 	// Add global error handler for resource loading errors
 	window.addEventListener('error', function(e) {
 		if (e.target && e.target.src && e.target.src.includes('%7B%7B')) {
