@@ -189,62 +189,37 @@ require( ["js/qlik"], function ( qlik ) {
 			attemptAddResetButton(5);
 		}, 2000);
 		
-		// Enhanced marker styling - monitor for new markers and style them
-		function enhanceMapMarkers() {
-			// Look for markers in the map with expanded selectors
-			var markers = document.querySelectorAll('.leaflet-marker-icon, .leaflet-div-icon, .qv-map-marker, [class*="marker"], .leaflet-marker, .qv-point-marker, svg[class*="marker"], path[class*="marker"]');
-			markers.forEach(function(marker) {
-				if (!marker.classList.contains('enhanced-marker')) {
-					marker.classList.add('enhanced-marker');
-					// Apply 9x scaling (increased from 3x)
-					marker.style.transform = 'scale(9)';
-					marker.style.transformOrigin = 'bottom center';
-					marker.style.zIndex = '1000';
-					
-					// Hide SVG triangles specifically - only in marker pane
-					if (marker.tagName === 'svg' && marker.closest('.leaflet-marker-pane')) {
-						marker.style.display = 'none';
-					}
-					if (marker.querySelector('svg') && marker.closest('.leaflet-marker-pane')) {
-						var svg = marker.querySelector('svg');
-						svg.style.display = 'none';
-					}
-					
-					// Add school icon
-					if (!marker.querySelector('.school-icon')) {
-						var schoolIcon = document.createElement('div');
-						schoolIcon.className = 'school-icon';
-						schoolIcon.innerHTML = '🏫';
-						schoolIcon.style.cssText = `
-							position: absolute;
-							top: 0;
-							left: 0;
-							width: 100%;
-							height: 100%;
-							display: flex;
-							align-items: center;
-							justify-content: center;
-							font-size: 20px;
-							z-index: 1001;
-							pointer-events: none;
-							background: white;
-							border-radius: 50%;
-						`;
-						marker.appendChild(schoolIcon);
-					}
-				}
-			});
-			
-			// Also hide any SVG elements ONLY in the marker pane (preserve legend)
-			var markerPaneSvgs = document.querySelectorAll('.leaflet-marker-pane svg');
-			markerPaneSvgs.forEach(function(svg) {
-				if (svg.querySelector('path') || svg.querySelector('polygon') || svg.querySelector('circle')) {
-					svg.style.display = 'none';
-				}
-			});
-		}
-		
-		// Monitor for new markers being added
+    // Enhanced map marker styling system
+    function enhanceMapMarkers() {
+        // Apply CSS styling to existing markers with expanded selectors
+        const markerSelectors = [
+            '.qv-map-marker',
+            '.leaflet-marker-icon',
+            '.leaflet-div-icon',
+            '.marker',
+            '[class*="marker"]',
+            '.qv-object-map .leaflet-marker-icon',
+            '.leaflet-marker',
+            '.qv-point-marker',
+            '.leaflet-marker-pane > *',
+            'svg[class*="marker"]',
+            'path[class*="marker"]',
+            'circle[class*="marker"]'
+        ];
+        
+        markerSelectors.forEach(selector => {
+            const markers = document.querySelectorAll(selector);
+            markers.forEach(marker => {
+                if (marker && !marker.classList.contains('enhanced-marker')) {
+                    marker.style.transform = 'scale(9)';
+                    marker.style.transformOrigin = 'bottom center';
+                    marker.style.zIndex = '1000';
+                    marker.classList.add('enhanced-marker');
+                    console.log('Enhanced marker:', marker);
+                }
+            });
+        });
+    }		// Monitor for new markers being added
 		var mapContainer = document.querySelector('#pHTVjT_content');
 		if (mapContainer) {
 			var observer = new MutationObserver(function(mutations) {

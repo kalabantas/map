@@ -46,50 +46,9 @@ require( ["js/qlik"], function ( qlik ) {
                     marker.style.transformOrigin = 'bottom center';
                     marker.style.zIndex = '1000';
                     marker.classList.add('enhanced-marker');
-                    
-                    // Hide SVG triangles specifically - only in marker pane
-                    if (marker.tagName === 'svg' && marker.closest('.leaflet-marker-pane')) {
-                        marker.style.display = 'none';
-                    }
-                    if (marker.querySelector('svg') && marker.closest('.leaflet-marker-pane')) {
-                        var svg = marker.querySelector('svg');
-                        svg.style.display = 'none';
-                    }
-                    
-                    // Add school icon directly to marker
-                    if (!marker.querySelector('.school-icon')) {
-                        var schoolIcon = document.createElement('div');
-                        schoolIcon.className = 'school-icon';
-                        schoolIcon.innerHTML = '🏫';
-                        schoolIcon.style.cssText = `
-                            position: absolute;
-                            top: 0;
-                            left: 0;
-                            width: 100%;
-                            height: 100%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 20px;
-                            z-index: 1001;
-                            pointer-events: none;
-                            background: white;
-                            border-radius: 50%;
-                        `;
-                        marker.appendChild(schoolIcon);
-                    }
-                    
                     console.log('Enhanced marker:', marker);
                 }
             });
-        });
-        
-        // Also hide any SVG elements ONLY in the marker pane (preserve legend)
-        const markerPaneSvgs = document.querySelectorAll('.leaflet-marker-pane svg');
-        markerPaneSvgs.forEach(svg => {
-            if (svg.querySelector('path') || svg.querySelector('polygon') || svg.querySelector('circle')) {
-                svg.style.display = 'none';
-            }
         });
     }
 
