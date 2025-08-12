@@ -28,6 +28,29 @@ require( ["js/qlik"], function ( qlik ) {
 		}
 	}, true);
 
+	// Handle unhandled promise rejections (like storage corruption)
+	window.addEventListener('unhandledrejection', function(e) {
+		if (e.reason && e.reason.message && e.reason.message.includes('sstable')) {
+			console.warn('Storage corruption detected, attempting to clear cache...');
+			// Try to clear problematic storage
+			try {
+				localStorage.clear();
+				sessionStorage.clear();
+				if ('caches' in window) {
+					caches.keys().then(function(names) {
+						names.forEach(function(name) {
+							caches.delete(name);
+						});
+					});
+				}
+				console.log('Cache cleared, please refresh the page');
+			} catch (err) {
+				console.warn('Could not clear cache automatically:', err);
+			}
+			e.preventDefault();
+		}
+	});
+
 	qlik.on( "error", function ( error ) {
 		$( '#popupText' ).append( error.message + "<br>" );
 		$( '#popup' ).fadeIn( 1000 );
