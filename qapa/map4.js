@@ -191,8 +191,8 @@ require( ["js/qlik"], function ( qlik ) {
 		
 		// Enhanced marker styling - monitor for new markers and style them
 		function enhanceMapMarkers() {
-			// Look for markers in the map
-			var markers = document.querySelectorAll('.leaflet-marker-icon, .qv-map-marker, [class*="marker"]');
+			// Look for markers in the map with expanded selectors
+			var markers = document.querySelectorAll('.leaflet-marker-icon, .leaflet-div-icon, .qv-map-marker, [class*="marker"], .leaflet-marker, .qv-point-marker, svg[class*="marker"], path[class*="marker"]');
 			markers.forEach(function(marker) {
 				if (!marker.classList.contains('enhanced-marker')) {
 					marker.classList.add('enhanced-marker');
@@ -200,6 +200,11 @@ require( ["js/qlik"], function ( qlik ) {
 					marker.style.transform = 'scale(9)';
 					marker.style.transformOrigin = 'bottom center';
 					marker.style.zIndex = '1000';
+					
+					// Hide SVG triangles specifically
+					if (marker.tagName === 'svg' || marker.querySelector('svg')) {
+						marker.style.display = 'none';
+					}
 					
 					// Add school icon
 					if (!marker.querySelector('.school-icon')) {
@@ -215,12 +220,22 @@ require( ["js/qlik"], function ( qlik ) {
 							display: flex;
 							align-items: center;
 							justify-content: center;
-							font-size: 16px;
+							font-size: 20px;
 							z-index: 1001;
 							pointer-events: none;
+							background: white;
+							border-radius: 50%;
 						`;
 						marker.appendChild(schoolIcon);
 					}
+				}
+			});
+			
+			// Also hide any SVG elements in the map that look like triangles
+			var svgElements = document.querySelectorAll('#pHTVjT_content svg, .qv-object-map svg');
+			svgElements.forEach(function(svg) {
+				if (svg.querySelector('path') || svg.querySelector('polygon')) {
+					svg.style.display = 'none';
 				}
 			});
 		}

@@ -288,25 +288,55 @@
 }
 
 /* Custom Map Marker Styling - Make markers 9x bigger and style as school icons */
-/* Target Qlik map markers */
+/* Target ALL possible Qlik map marker selectors */
 .qv-map-marker,
 .leaflet-marker-icon,
 .marker,
 [class*="marker"],
 .qv-object-map .leaflet-marker-icon,
-#pHTVjT_content .leaflet-marker-icon {
+#pHTVjT_content .leaflet-marker-icon,
+.leaflet-marker,
+.leaflet-div-icon,
+.qv-point-marker,
+.qv-map-point,
+svg[class*="marker"],
+path[class*="marker"],
+circle[class*="marker"],
+.leaflet-marker-pane > *,
+.leaflet-marker-pane .leaflet-marker,
+.leaflet-marker-pane .leaflet-div-icon {
 	transform: scale(9) !important;
 	transform-origin: bottom center !important;
 	z-index: 1000 !important;
 }
 
-/* Style markers as school building icons */
+/* Override SVG triangle markers specifically */
+.qv-object-map svg path,
+.leaflet-marker-pane svg path,
+#pHTVjT_content svg path {
+	fill: transparent !important;
+	stroke: transparent !important;
+	opacity: 0 !important;
+}
+
+/* Hide triangle markers completely */
+.qv-object-map svg,
+.leaflet-marker-pane svg,
+#pHTVjT_content svg {
+	display: none !important;
+}
+
+/* Style markers as school building icons - MORE SPECIFIC SELECTORS */
 .qv-map-marker::before,
 .leaflet-marker-icon::before,
+.leaflet-div-icon::before,
 .marker::before,
-[class*="marker"]::before {
+[class*="marker"]::before,
+.leaflet-marker::before,
+.qv-point-marker::before,
+.leaflet-marker-pane > *::before {
 	content: "🏫" !important;
-	font-size: 16px !important;
+	font-size: 20px !important;
 	display: block !important;
 	text-align: center !important;
 	line-height: 1 !important;
@@ -316,19 +346,54 @@
 	top: 0 !important;
 	left: 0 !important;
 	background: transparent !important;
+	z-index: 1002 !important;
 }
 
-/* Alternative approach using CSS background for school icon if emoji doesn't work */
+/* Add school icons after map markers using ::after as backup */
+.qv-map-marker::after,
+.leaflet-marker-icon::after,
+.leaflet-div-icon::after,
+.marker::after,
+[class*="marker"]::after,
+.leaflet-marker::after,
+.qv-point-marker::after,
+.leaflet-marker-pane > *::after {
+	content: "🏫" !important;
+	font-size: 20px !important;
+	display: block !important;
+	text-align: center !important;
+	line-height: 1 !important;
+	width: 100% !important;
+	height: 100% !important;
+	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	background: white !important;
+	border-radius: 50% !important;
+	z-index: 1003 !important;
+}
+
+/* Alternative approach using CSS background for school icon - EXPANDED SELECTORS */
 .qv-map-marker,
 .leaflet-marker-icon,
+.leaflet-div-icon,
 .marker,
-[class*="marker"] {
+[class*="marker"],
+.leaflet-marker,
+.qv-point-marker,
+.leaflet-marker-pane > *,
+.qv-object-map .leaflet-marker-icon,
+#pHTVjT_content .leaflet-marker-icon,
+#pHTVjT_content .leaflet-marker,
+#pHTVjT_content .leaflet-div-icon {
 	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23c5954c"><path d="M12 3L1 9L5 11.18V17.18L12 21L19 17.18V11.18L21 10.09V17H23V9L12 3ZM18.82 9L12 12.72L5.18 9L12 5.28L18.82 9ZM17 15.99L12 18.72L7 15.99V12.27L12 15L17 12.27V15.99Z"/></svg>') !important;
 	background-size: contain !important;
 	background-repeat: no-repeat !important;
 	background-position: center !important;
-	width: 24px !important;
-	height: 24px !important;
+	width: 30px !important;
+	height: 30px !important;
+	border-radius: 50% !important;
+	background-color: white !important;
 }
 
 /* Ensure markers are visible and properly positioned */

@@ -22,13 +22,20 @@ require( ["js/qlik"], function ( qlik ) {
 
     // Enhanced map marker styling system
     function enhanceMapMarkers() {
-        // Apply CSS styling to existing markers
+        // Apply CSS styling to existing markers with expanded selectors
         const markerSelectors = [
             '.qv-map-marker',
             '.leaflet-marker-icon',
+            '.leaflet-div-icon',
             '.marker',
             '[class*="marker"]',
-            '.qv-object-map .leaflet-marker-icon'
+            '.qv-object-map .leaflet-marker-icon',
+            '.leaflet-marker',
+            '.qv-point-marker',
+            '.leaflet-marker-pane > *',
+            'svg[class*="marker"]',
+            'path[class*="marker"]',
+            'circle[class*="marker"]'
         ];
         
         markerSelectors.forEach(selector => {
@@ -39,9 +46,46 @@ require( ["js/qlik"], function ( qlik ) {
                     marker.style.transformOrigin = 'bottom center';
                     marker.style.zIndex = '1000';
                     marker.classList.add('enhanced-marker');
+                    
+                    // Hide SVG triangles specifically
+                    if (marker.tagName === 'svg' || marker.querySelector('svg')) {
+                        marker.style.display = 'none';
+                    }
+                    
+                    // Add school icon directly to marker
+                    if (!marker.querySelector('.school-icon')) {
+                        var schoolIcon = document.createElement('div');
+                        schoolIcon.className = 'school-icon';
+                        schoolIcon.innerHTML = '🏫';
+                        schoolIcon.style.cssText = `
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            font-size: 20px;
+                            z-index: 1001;
+                            pointer-events: none;
+                            background: white;
+                            border-radius: 50%;
+                        `;
+                        marker.appendChild(schoolIcon);
+                    }
+                    
                     console.log('Enhanced marker:', marker);
                 }
             });
+        });
+        
+        // Also hide any SVG elements in the map that look like triangles
+        const svgElements = document.querySelectorAll('#pHTVjT_content svg, .qv-object-map svg');
+        svgElements.forEach(svg => {
+            if (svg.querySelector('path') || svg.querySelector('polygon')) {
+                svg.style.display = 'none';
+            }
         });
     }
 
