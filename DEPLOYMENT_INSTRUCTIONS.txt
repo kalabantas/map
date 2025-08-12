@@ -1,0 +1,131 @@
+================================================================================
+                    MAP4 DEPLOYMENT INSTRUCTIONS
+                    Test (QAPE) to Production (QAPA) Sync
+================================================================================
+
+OVERVIEW:
+---------
+This document provides step-by-step instructions for updating the production 
+environment (qapa folder) with changes from the test environment (root folder),
+while maintaining the correct production-specific configurations.
+
+FOLDER STRUCTURE:
+-----------------
+map4/                          <- Test Environment (QAPE server)
+├── map4.html                  <- Test HTML file
+├── map4.js                    <- Test JavaScript file  
+├── map4.css                   <- Shared CSS file
+├── map4.qext                  <- Shared extension metadata
+├── wbfolder.wbl              <- Shared folder metadata
+├── 1                         <- Empty placeholder file
+└── qapa/                     <- Production Environment (QAPA server)
+    ├── map4.html             <- Production HTML file
+    ├── map4.js               <- Production JavaScript file
+    ├── map4.css              <- Production CSS file (copy of root)
+    ├── map4.qext             <- Production extension metadata (copy of root)
+    ├── wbfolder.wbl          <- Production folder metadata (copy of root)
+    ├── 1                     <- Production placeholder file (copy of root)
+    └── map4.js.working       <- Original working reference file
+
+CRITICAL CONFIGURATION DIFFERENCES:
+-----------------------------------
+Test Environment (Root):
+- Host: 'qape.moe.edu.kw'
+- App ID: 'abe37f96-29b3-42f3-b45c-db41d2ab1320'
+- URL: https://qape.moe.edu.kw/extensions/map4/map4.html
+
+Production Environment (qapa/):
+- Host: 'qapa.moe.edu.kw'  
+- App ID: 'e45e93fb-2ef9-432a-8c7a-5ddeaced8018'
+- URL: https://qapa.moe.edu.kw/extensions/map4/qapa/map4.html
+
+DEPLOYMENT STEPS:
+-----------------
+
+1. TEST CHANGES FIRST:
+   - Make all changes in the root folder (test environment)
+   - Test thoroughly on: https://qape.moe.edu.kw/extensions/map4/map4.html
+   - Ensure all functionality works correctly
+
+2. UPDATE PRODUCTION HTML (map4.html):
+   - Copy root/map4.html to qapa/map4.html
+   - IMPORTANT: Update all server references from 'qape' to 'qapa':
+     * DNS prefetch: href="//qapa.moe.edu.kw"
+     * Preconnect: href="https://qapa.moe.edu.kw"
+     * Preload resources: href="https://qapa.moe.edu.kw/resources/..."
+     * Stylesheet links: href="https://qapa.moe.edu.kw/resources/..."
+     * Script sources: src="https://qapa.moe.edu.kw/resources/..."
+
+3. UPDATE PRODUCTION JAVASCRIPT (map4.js):
+   - Copy root/map4.js to qapa/map4.js
+   - CRITICAL: Update configuration section:
+     * Change host: 'qape.moe.edu.kw' → 'qapa.moe.edu.kw'
+     * Change App ID: 'abe37f96-29b3-42f3-b45c-db41d2ab1320' 
+                   → 'e45e93fb-2ef9-432a-8c7a-5ddeaced8018'
+
+4. UPDATE SHARED FILES:
+   - Copy root/map4.css to qapa/map4.css (no changes needed)
+   - Copy root/map4.qext to qapa/map4.qext (no changes needed)
+   - Copy root/wbfolder.wbl to qapa/wbfolder.wbl (no changes needed)
+   - Copy root/1 to qapa/1 (no changes needed)
+
+5. VERIFY PRODUCTION DEPLOYMENT:
+   - Access: https://qapa.moe.edu.kw/extensions/map4/qapa/map4.html
+   - Check browser console for errors
+   - Verify map loads correctly
+   - Test all interactive features
+   - Confirm Arabic text displays properly in sidebar
+
+QUICK REFERENCE - SEARCH & REPLACE:
+-----------------------------------
+When updating production files, use these replacements:
+
+HTML File (map4.html):
+- Find: qape.moe.edu.kw
+- Replace: qapa.moe.edu.kw
+
+JavaScript File (map4.js):
+- Find: host: 'qape.moe.edu.kw'
+- Replace: host: 'qapa.moe.edu.kw'
+- Find: 'abe37f96-29b3-42f3-b45c-db41d2ab1320'
+- Replace: 'e45e93fb-2ef9-432a-8c7a-5ddeaced8018'
+
+CURRENT FEATURES (Both Environments):
+------------------------------------
+✓ Performance optimizations (resource preloading, async loading)
+✓ Enhanced spinner (120px wide, centered, hides when map loads)
+✓ Minimized white space between menu and map
+✓ Storage corruption error handling (sstable errors)
+✓ Template variable image error suppression
+✓ Robust sidebar detection with retry logic
+✓ Optimized sidebar width (150px) for Arabic text display
+
+TROUBLESHOOTING:
+----------------
+Common Issues:
+1. Map doesn't load: Check App ID is correct for environment
+2. Server errors: Verify host configuration matches target server
+3. Sidebar issues: Check console for "Sidebar modified successfully" message
+4. Storage errors: Browser will auto-clear corrupted cache
+5. Template errors: Harmless {{image.src}} errors are now suppressed
+
+Git Commands:
+- git add .
+- git commit -m "Description of changes"
+- git push origin main
+
+TEST URLs:
+----------
+Test: https://qape.moe.edu.kw/extensions/map4/map4.html
+Prod: https://qapa.moe.edu.kw/extensions/map4/qapa/map4.html
+
+NOTES:
+------
+- Always test changes in the test environment first
+- The map4.js.working file in qapa/ is kept as a reference
+- Both environments should have identical functionality
+- Only server hostnames and App IDs should differ between environments
+- CSS and other files are identical between environments
+
+Last Updated: August 12, 2025
+================================================================================
