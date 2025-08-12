@@ -340,3 +340,39 @@
 .qv-object-map .leaflet-map-pane {
 	padding: 30px !important;
 }
+
+/* Reset button styling - positioned in top left of map */
+.reset-button {
+	background-color: #0066cc !important;
+	color: white !important;
+	border: none !important;
+	padding: 8px 16px !important;
+	border-radius: 4px !important;
+	cursor: pointer !important;
+	font-size: 14px !important;
+	font-weight: bold !important;
+	margin: 10px !important;
+	vertical-align: middle !important;
+	transition: background-color 0.3s ease !important;
+	position: absolute !important;
+	top: 10px !important;
+	left: 10px !important;
+	z-index: 1001 !important;
+	white-space: nowrap !important;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+}
+
+.reset-button:hover {
+	background-color: #0052a3 !important;
+}
+
+.reset-button:active {
+	background-color: #003d7a !important;
+	transform: translateY(1px) !important;
+}
+
+/* Map container positioning for reset button */
+.qv-object-map,
+#pHTVjT_content {
+	position: relative !important;
+}

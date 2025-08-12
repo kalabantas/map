@@ -35,7 +35,7 @@ require( ["js/qlik"], function ( qlik ) {
             const markers = document.querySelectorAll(selector);
             markers.forEach(marker => {
                 if (marker && !marker.classList.contains('enhanced-marker')) {
-                    marker.style.transform = 'scale(3)';
+                    marker.style.transform = 'scale(9)';
                     marker.style.transformOrigin = 'bottom center';
                     marker.style.zIndex = '1000';
                     marker.classList.add('enhanced-marker');
@@ -208,6 +208,75 @@ require( ["js/qlik"], function ( qlik ) {
 		setTimeout(function() {
 			modifySidebar(6);
 		}, 1000);
+		
+		// Add reset button to top left corner of map
+		function addResetButton() {
+			// Look for the map container
+			var mapContainer = document.querySelector('#pHTVjT_content') || 
+			                  document.querySelector('.qv-object-map') ||
+			                  document.querySelector('#pHTVjT');
+			
+			if (mapContainer && !document.getElementById('custom-reset-button')) {
+				// Create reset button
+				var resetButton = document.createElement('button');
+				resetButton.id = 'custom-reset-button';
+				resetButton.className = 'reset-button';
+				resetButton.innerHTML = 'إعادة تعيين'; // "Reset" in Arabic
+				resetButton.title = 'إعادة تعيين جميع الفلاتر'; // "Reset all filters" in Arabic
+				
+				// Add click handler
+				resetButton.addEventListener('click', function() {
+					app.clearAll();
+					console.log('All filters cleared');
+				});
+				
+				// Position button in top left of map
+				resetButton.style.cssText = `
+					position: absolute !important;
+					top: 10px !important;
+					left: 10px !important;
+					z-index: 1001 !important;
+					background-color: #0066cc !important;
+					color: white !important;
+					border: none !important;
+					padding: 8px 16px !important;
+					border-radius: 4px !important;
+					cursor: pointer !important;
+					font-size: 14px !important;
+					font-weight: bold !important;
+					box-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
+				`;
+				
+				// Ensure map container has relative positioning
+				mapContainer.style.position = 'relative';
+				
+				// Add button to map container
+				mapContainer.appendChild(resetButton);
+				
+				console.log('Reset button added to map top-left corner');
+			}
+		}
+		
+		// Try to add reset button with multiple attempts
+		function attemptAddResetButton(attempts) {
+			if (attempts <= 0) {
+				console.log("Reset button addition failed after all attempts");
+				return;
+			}
+			
+			addResetButton();
+			
+			if (!document.getElementById('custom-reset-button')) {
+				setTimeout(function() {
+					attemptAddResetButton(attempts - 1);
+				}, 1000);
+			}
+		}
+		
+		// Start adding reset button after a delay
+		setTimeout(function() {
+			attemptAddResetButton(5);
+		}, 2000);
 	});
 
 
