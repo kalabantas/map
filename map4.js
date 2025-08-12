@@ -47,9 +47,13 @@ require( ["js/qlik"], function ( qlik ) {
                     marker.style.zIndex = '1000';
                     marker.classList.add('enhanced-marker');
                     
-                    // Hide SVG triangles specifically
-                    if (marker.tagName === 'svg' || marker.querySelector('svg')) {
+                    // Hide SVG triangles specifically - only in marker pane
+                    if (marker.tagName === 'svg' && marker.closest('.leaflet-marker-pane')) {
                         marker.style.display = 'none';
+                    }
+                    if (marker.querySelector('svg') && marker.closest('.leaflet-marker-pane')) {
+                        var svg = marker.querySelector('svg');
+                        svg.style.display = 'none';
                     }
                     
                     // Add school icon directly to marker
@@ -80,10 +84,10 @@ require( ["js/qlik"], function ( qlik ) {
             });
         });
         
-        // Also hide any SVG elements in the map that look like triangles
-        const svgElements = document.querySelectorAll('#pHTVjT_content svg, .qv-object-map svg');
-        svgElements.forEach(svg => {
-            if (svg.querySelector('path') || svg.querySelector('polygon')) {
+        // Also hide any SVG elements ONLY in the marker pane (preserve legend)
+        const markerPaneSvgs = document.querySelectorAll('.leaflet-marker-pane svg');
+        markerPaneSvgs.forEach(svg => {
+            if (svg.querySelector('path') || svg.querySelector('polygon') || svg.querySelector('circle')) {
                 svg.style.display = 'none';
             }
         });

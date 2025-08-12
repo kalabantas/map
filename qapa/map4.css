@@ -310,19 +310,17 @@ circle[class*="marker"],
 	z-index: 1000 !important;
 }
 
-/* Override SVG triangle markers specifically */
-.qv-object-map svg path,
+/* Override SVG triangle markers specifically - ONLY in marker pane */
 .leaflet-marker-pane svg path,
-#pHTVjT_content svg path {
+.leaflet-marker-pane svg polygon,
+.leaflet-marker-pane svg circle {
 	fill: transparent !important;
 	stroke: transparent !important;
 	opacity: 0 !important;
 }
 
-/* Hide triangle markers completely */
-.qv-object-map svg,
-.leaflet-marker-pane svg,
-#pHTVjT_content svg {
+/* Hide triangle markers completely - ONLY in marker pane to preserve legend */
+.leaflet-marker-pane svg {
 	display: none !important;
 }
 
@@ -394,6 +392,27 @@ circle[class*="marker"],
 	height: 30px !important;
 	border-radius: 50% !important;
 	background-color: white !important;
+	position: relative !important;
+}
+
+/* Create overlay school icon that appears on top of everything */
+.leaflet-marker-pane > *::before {
+	content: "🏫" !important;
+	position: absolute !important;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	font-size: 24px !important;
+	z-index: 10000 !important;
+	background: white !important;
+	border-radius: 50% !important;
+	width: 40px !important;
+	height: 40px !important;
+	display: flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	border: 2px solid #c5954c !important;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
 }
 
 /* Ensure markers are visible and properly positioned */
